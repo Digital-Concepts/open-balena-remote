@@ -12,7 +12,7 @@ SSH_CMD="\
   export TERM=linux; \
   export PS1='\[\033[01;32m\]${UUID:0:7}/host\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ ';"
 if [ -z "$SSH_CONTAINER" ]; then
-  SSH_CMD="${SSH_CMD} /bin/bash"
+  SSH_CMD="${SSH_CMD} /bin/sh"
 else
   SSH_CMD="${SSH_CMD} \
   export CONTAINER=\$(balena container ls -q --filter name=${SSH_CONTAINER}* | head -n 1); \
@@ -23,7 +23,7 @@ else
   balena exec -it \
     -e TMOUT=21600 \
     -e PROMPT_COMMAND='PS1=\"\[\033[01;32m\]\${BALENA_DEVICE_UUID:0:7}/\${BALENA_SERVICE_NAME}\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ \"' \
-    \$CONTAINER /bin/bash"
+    \$CONTAINER /bin/sh"
 fi
 
 ssh -t $USERNAME@localhost -i $SESSION_DIR/privateKey -p $LOCALPORT -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ServerAliveInterval=10 -o LogLevel=ERROR $SSH_CMD
